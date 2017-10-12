@@ -42,7 +42,7 @@ def baseteamsqlinsert(passcode):
     
     z = 0
     for week in dates:
-        cnx = mysql.connector.connect(user='root', password='Hensley86!',
+        cnx = mysql.connector.connect(user='root', password=passcode,
                                   host='127.0.0.1',
                                   database='ncaa') 
     
