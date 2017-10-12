@@ -9,7 +9,6 @@ def bassetsqlinsert(passcode):
     import requests
     from lxml import html
     import re
-    import pandas as pd
     import mysql.connector   
     cnx = mysql.connector.connect(user='root', password=passcode,
                                   host='127.0.0.1',

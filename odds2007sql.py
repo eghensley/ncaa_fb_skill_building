@@ -161,7 +161,7 @@ def odds2007sql(passcode):
                                 try:
                                     juice = float(unicodedata.normalize('NFKD', tree.xpath(juicepath)[1]).encode('ascii', 'ignore'))
                                 except ValueError:
-                                    juice = 'Null'
+                                    juice = 0
                                 oupath = root+gamepath+team2path+overunderpath
                                 try:
                                     overunder = float(unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore'))
@@ -187,7 +187,7 @@ def odds2007sql(passcode):
                                 try:
                                     juice = float(unicodedata.normalize('NFKD', tree.xpath(juicepath)[1]).encode('ascii', 'ignore'))
                                 except ValueError:
-                                    juice = 'Null'
+                                    juice = 0
                                 oupath = root+gamepath+team1path+overunderpath
                                 try:
                                     overunder = float(unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore'))
