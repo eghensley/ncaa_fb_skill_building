@@ -299,8 +299,13 @@ def oddspost2007sql(passcode, segment):
                                     favorite1 = True
                                     y2 = float(team2linelist[each].strip().split('o')[1])      
                                 elif len(spacesplit2) == 2 and len(osplit2) == 1 and len(usplit2) == 1:
-                                    x2 = float(team2linelist[each].strip().split(' ')[0])
-                                    favorite2 = True
+                                    try:
+                                        x2 = float(team2linelist[each].strip().split(' ')[0])
+                                        favorite2 = True
+                                    except ValueError:
+                                        if team2linelist[each].strip().split(' ')[0] == 'PK':
+                                            x2 = 0
+                                            favorite2 = True
                                     try:
                                         y2 = float(team2linelist[each].strip().split(' ')[1])
                                     except ValueError:
