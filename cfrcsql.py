@@ -9,7 +9,9 @@ Created on Fri Oct  6 16:17:48 2017
 def cfrcsqlinsert(passcode):
     import requests
     from lxml import html
-    import mysql.connector   
+    import mysql.connector 
+    import datetime
+
     cnx = mysql.connector.connect(user='root', password=passcode,
                                   host='127.0.0.1',
                                   database='ncaa')    
@@ -25,6 +27,21 @@ def cfrcsqlinsert(passcode):
         cfrcteamsdict[cfrcnames[i]] = uppercaseteamnames[i]
     
     for j in urllist:
+        usedate = None
+        days_ahead = None
+        url = None
+        pageContent = None
+        tree = None
+        thisdate = None
+        day = None
+        month = None
+        year = None
+        d = None
+        gamedate = None
+        useday = None
+        usemonth = None
+        useyear = None
+        
         cfrcinsertx = None
         cfrcinsert = []
         url = 'http://cfrc.com/ranking/billingsley-mov-%s/' % (j)
@@ -35,8 +52,26 @@ def cfrcsqlinsert(passcode):
         day = thisdate.split(' ')[2][:-1]
         month = thisdate.split(' ')[1]
         year = thisdate.split(' ')[3]
+
+        d = datetime.date(int(year), int(monthdict[month]), int(day))
+        weekday = 5
+        days_ahead = weekday - d.weekday()
+        if days_ahead < 0:
+            days_ahead = 7 + days_ahead
+        gamedate = d + datetime.timedelta(days_ahead)
+        if len(str(gamedate.day)) == 2:
+            useday = str(gamedate.day)
+        elif len(str(gamedate.day)) == 1:
+            useday = '0'+str(gamedate.day)
+        if len(str(gamedate.month)) == 2:
+            usemonth = str(gamedate.month)
+        elif len(str(gamedate.month)) == 1:
+            usemonth = '0'+str(gamedate.month)
+        useyear = str(gamedate.year)
         
-        usedate = year+'_'+str(monthdict[month])+'_'+day
+        usedate = useyear+'-'+usemonth+'-'+useday
+        if usedate == '2014-07-26':
+            usedate = '2014-08-30'
         cfrcstats = []
         for i in range(2,132):
             try:
@@ -50,11 +85,12 @@ def cfrcsqlinsert(passcode):
                 pass
         if len(cfrcstats) > 0:
             for team in cfrcstats:
-                    cfrcinsert.append("('"+team[0]+"', '"+str(usedate)+"', "+str(team[1])+")")
+                    cfrcinsert.append("('"+cfrcteamsdict[team[0]]+"', '"+str(usedate)+"', "+str(team[1])+")")
             cfrcinsertx = ','.join(cfrcinsert)
             cfrclist = ['INSERT INTO cfrcratings VALUES', cfrcinsertx, ';']
             initialcfrcinsert = ' '.join(cfrclist)  
             add_cfrc = initialcfrcinsert  
+            print usedate
             cursor.execute('SET foreign_key_checks = 0;')
             cursor.execute(add_cfrc)
             cnx.commit()

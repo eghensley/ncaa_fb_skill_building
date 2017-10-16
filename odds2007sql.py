@@ -176,7 +176,7 @@ def odds2007sql(passcode):
                                     elif len(str(unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore')).split('o')) == 1 and len(str(unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore')).split('u')) == 1 and unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore') == '\n \n' :
                                         overunder = 'Null'
                                         overunderjuice = 'Null'
-                                game = [gameday, name1, name2, line, juice, overunder, overunderjuice, moneyline1, moneyline2, score1, score2]
+                                game = [gameday, name1, name2, line, juice, overunder, overunderjuice, moneyline1, moneyline2, score1, score2, 1]
                             elif favorite == 2:
                                 try:
                                     line = float(tree.xpath(team2fav)[0])
@@ -202,14 +202,14 @@ def odds2007sql(passcode):
                                     elif len(str(unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore')).split('o')) == 1 and len(str(unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore')).split('u')) == 1 and unicodedata.normalize('NFKD', tree.xpath(oupath)[0]).encode('ascii', 'ignore') == '\n \n':
                                         overunder = 'Null'
                                         overunderjuice = 'Null'
-                                game = [gameday, name2, name1, line, juice, overunder, overunderjuice, moneyline2, moneyline1, score2, score1]
+                                game = [gameday, name2, name1, line, juice, overunder, overunderjuice, moneyline2, moneyline1, score2, score1, 0]
                             print game
                             oddsinsert = []
                             oddsinsertx = None
                             oddslist = []
                             initialoddsinsert = None
                             add_odds = None
-                            oddsinsert.append("('"+game[0]+"', '"+str(game[1])+"', '"+str(game[2])+"', "+str(game[3])+", "+str(game[4])+", "+str(game[5])+", "+str(game[6])+", "+str(game[7])+", "+str(game[8])+", "+str(game[9])+", "+str(game[10])+")")
+                            oddsinsert.append("('"+game[0]+"', '"+str(game[1])+"', '"+str(game[2])+"', "+str(game[3])+", "+str(game[4])+", "+str(game[5])+", "+str(game[6])+", "+str(game[7])+", "+str(game[8])+", "+str(game[9])+", "+str(game[10])+", "+str(game[11])+")")
                             oddsinsertx = ','.join(oddsinsert)
                             oddslist = ['INSERT INTO oddsdata VALUES', oddsinsertx, ';']
                             initialoddsinsert = ' '.join(oddslist)  

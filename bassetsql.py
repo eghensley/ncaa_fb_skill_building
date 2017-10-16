@@ -27,7 +27,6 @@ def bassetsqlinsert(passcode):
     seasonrange = ['03','04','05','06','07','08','09','10','11','12','13','14','15','16','17']
     weekrange = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20']
     
-    
     for season in seasonrange:
         nextseason = 0
         for week in weekrange:
@@ -43,16 +42,21 @@ def bassetsqlinsert(passcode):
             day = None
             day = None
             usedate = None
+            r = None
             teamratings = []
             if nextseason == 1:
                 pass
             else:
                 url = 'http://gmbassett.nfshost.com/football/col_%swk%spred.html' % (season,week)
+#                url = 'http://gmbassett.nfshost.com/football/col_07wk02pred.html'
                 pageContent=requests.get(url)
                 tree = html.fromstring(pageContent.content)
                 invalid = tree.xpath('//html/head/title/text()')
                 if invalid[0] == '404 Not Found':
-                    nextseason = 1
+                    if week == '00':
+                        pass
+                    else:
+                        nextseason = 1
                 else:
                     thisdate = tree.xpath('//html/body/h1/text()')[0].strip().split(' ')
                     bowlcheck = thisdate[1]
@@ -61,18 +65,47 @@ def bassetsqlinsert(passcode):
                         pass
                     else:
                         year = thisdate[0]
-                        try:
-                            month = str(monthdict[thisdate[4][:-1]])
-                        except KeyError:
-                            try:
-                                month = str(monthdict[thisdate[4]])
-                            except KeyError:
-                                month = str(monthdict[thisdate[3][:-1]])
-                        try:
-                            int(thisdate[3][1:].split('-')[0])
-                            day = thisdate[3][1:].split('-')[0]
-                        except ValueError:
-                            day = thisdate[2][1:].split('-')[0]
+                        for q in range(0, len(thisdate)):
+                            if thisdate[q] == 'Forecast':
+                                try:
+                                    month = str(monthdict[thisdate[q-1][:-1]])
+                                    r = q-2
+                                except KeyError:
+                                    for w in range(0, q-1):
+                                        try:
+                                            month = str(monthdict[thisdate[w][:-1]])
+                                            r = w-1
+                                        except KeyError:
+                                            continue                                   
+                                try:
+                                    day = str(int(thisdate[r]))
+                                except ValueError:
+                                    try:
+                                        day = str(int(thisdate[r][1:]))
+                                    except ValueError:
+                                        day = str(int(thisdate[r].split('-')[1]))     
+                        if month == None:
+                            for q in range(0, len(thisdate)):
+                                if thisdate[q] == 'for':
+                                    month = str(monthdict[thisdate[q-1][:-1]])
+                                    day = str(int(thisdate[q-2][1:]))
+                                    
+#                        try:
+#                            month = str(monthdict[thisdate[4][:-1]])
+#                        except KeyError:
+#                            try:
+#                                month = str(monthdict[thisdate[4]])
+#                            except KeyError:
+#                                month = str(monthdict[thisdate[3][:-1]])
+#                        try:
+##                            int(thisdate[3][1:].split('-')[0])
+##                            day = thisdate[3][1:].split('-')[0]
+#                            day = int(thisdate[3].split('-')[1])
+#                        except IndexError:
+#                            try:
+#                                day = int(thisdate[3][1:])
+#                            except ValueError:
+#                                day = int(thisdate[2][1:])
                         usedate = year+'-'+month+'-'+day
                         data = str(tree.xpath('/html/body/pre/text()'))
                         for team in teamnames:
@@ -83,32 +116,53 @@ def bassetsqlinsert(passcode):
                             nameloc = None
                             rank = None
                             ratingtuple = None
+                            ratingtuplelist = []
                             nameindex = bassetteamsdict[team]+'  '
                             namematch = [m.start() for m in re.finditer(nameindex, data)]
-                            try:
-                                nameloc = namematch[0]
-                            except IndexError:
-                                emptypass = 1
-                            if emptypass == 0:
+                            for v in range(0, len(namematch)):
+                                emptypass = 0
+                                partialpass = 0
+                                nameloc = None
+                                rank = None
+                                ratingtuple = None
                                 try:
-                                    int(data[nameloc-2])
-                                except ValueError:
-                                    partialpass = 1
-                            if emptypass == 0 and partialpass == 0:
-                                try:
-                                    int(data[nameloc-4])
-                                    rank = int(data[nameloc-4:nameloc-1])
-                                except ValueError:
-                                    rank = int(data[nameloc-3:nameloc-1])
-                                ratingtuple = (team, rank)
-                                teamratings.append(ratingtuple)
+                                    nameloc = namematch[v]
+                                except IndexError:
+                                    emptypass = 1
+                                if emptypass == 0:
+                                    try:
+                                        int(data[nameloc-2])
+                                    except ValueError:
+                                        partialpass = 1
+                                if emptypass == 0 and partialpass == 0:
+                                    try:
+                                        int(data[nameloc-4])
+                                        rank = int(data[nameloc-4:nameloc-1])
+                                    except ValueError:
+                                        rank = int(data[nameloc-3:nameloc-1])
+                                    ratingtuple = (team, rank)
+                                    ratingtuplelist.append(ratingtuple)
+                            if len(ratingtuplelist) == 1:
+                                teamratings.append(ratingtuplelist[0])
+                            elif len(ratingtuplelist) == 2:
+                                if ratingtuplelist[0] == ratingtuplelist[1]:
+                                    teamratings.append(ratingtuplelist[0])
+                                else:
+                                    teamratings.append(ratingtuplelist[0])
+                                    teamratings.append(ratingtuplelist[1])
+                            elif len(ratingtuplelist) > 2:
+                                for every in ratingtuplelist:
+                                    teamratings.append(every)
                         if len(teamratings) > 0:
+                            if week == '15' and season == '13':
+                                usedate = '2013-05-14'
                             for team in teamratings:
                                     bassetinsert.append("('"+team[0]+"', '"+str(usedate)+"', "+str(team[1])+")")
                             bassetinsertx = ','.join(bassetinsert)
                             bassetlist = ['INSERT INTO bassetratings VALUES', bassetinsertx, ';']
                             initialbassetinsert = ' '.join(bassetlist)  
                             add_basset = initialbassetinsert  
+                            print usedate
                             cursor.execute('SET foreign_key_checks = 0;')
                             cursor.execute(add_basset)
                             cnx.commit()

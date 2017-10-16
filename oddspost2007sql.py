@@ -404,9 +404,9 @@ def oddspost2007sql(passcode, segment):
                                         if y1 == 'Null':
                                             overunderjuice = str(y1)  
                             if favorite == 1:
-                                game = [gameday, team1, team2, line, linejuice, overunder, overunderjuice, moneyline1, moneyline2, score1, score2]
+                                game = [gameday, team1, team2, line, linejuice, overunder, overunderjuice, moneyline1, moneyline2, score1, score2, 1]
                             elif favorite == 2:
-                                game = [gameday, team2, team1, line, linejuice, overunder, overunderjuice, moneyline2, moneyline1, score2, score1]
+                                game = [gameday, team2, team1, line, linejuice, overunder, overunderjuice, moneyline2, moneyline1, score2, score1, 0]
                             if favorite == None:
                                 favorite_errors.append(url)
                             else:
@@ -417,7 +417,7 @@ def oddspost2007sql(passcode, segment):
                                 oddslist = []
                                 initialoddsinsert = None
                                 add_odds = None
-                                oddsinsert.append("('"+game[0]+"', '"+str(game[1])+"', '"+str(game[2])+"', "+str(game[3])+", "+str(game[4])+", "+str(game[5])+", "+str(game[6])+", "+str(game[7])+", "+str(game[8])+", "+str(game[9])+", "+str(game[10])+")")
+                                oddsinsert.append("('"+game[0]+"', '"+str(game[1])+"', '"+str(game[2])+"', "+str(game[3])+", "+str(game[4])+", "+str(game[5])+", "+str(game[6])+", "+str(game[7])+", "+str(game[8])+", "+str(game[9])+", "+str(game[10])+", "+str(game[11])+")")
                                 oddsinsertx = ','.join(oddsinsert)
                                 oddslist = ['INSERT INTO oddsdata VALUES', oddsinsertx, ';']
                                 initialoddsinsert = ' '.join(oddslist)  
