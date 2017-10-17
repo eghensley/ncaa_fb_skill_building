@@ -29,16 +29,20 @@ from sklearn.svm import SVC
 
 data = classificationdata()
 xvars = list(data)[:-1]
-#data[xvars] = preprocessing.scale(data[xvars])
 
 useset, holdoutset = train_test_split(data, test_size = .1, random_state = 1108)
 
-kernels = ['poly', 'rbf', 'sigmoid']
-Cs = [.01, .1, 1, 10]
-degrees = range(2,5)
-parameterscores = pd.DataFrame()
-gammas = [.001, .01, .05, .1]
+#kernels = ['poly', 'rbf', 'sigmoid']
+#Cs = [.01, .1, 1, 10]
+#degrees = range(2,5)
+#gammas = [.001, .01, .05, .1]
 
+
+Cs = [5, 10, 20]
+degrees = [3]
+gammas = [.075, .1, .25]
+
+parameterscores = pd.DataFrame()
 end = len(Cs)*len(degrees)*len(gammas)*5
 at = 0
 
@@ -75,6 +79,54 @@ for d in degrees:
                 modelaveragekappa = sum(modelkappa)/len(modelkappa)
                 modelaveragef1 = sum(modelf1)/len(modelf1)
                 parameterscores = parameterscores.append({'kernel':k, 'C':c, 'gamma':g, 'degrees':d, 'accuracy':modelaverageaccuracy, 'roc':modelaverageroc, 'kappa':modelaveragekappa, 'f1':modelaveragef1}, ignore_index = True)
+
+for i in [35, 46, 71, 86, 88]:    
+    trainx, testx, trainy, testy = train_test_split(useset[xvars], useset['y'], test_size = .1, random_state = i)  
+    trainx = preprocessing.scale(trainx)
+    testx = preprocessing.scale(testx)
+    model = GaussianNB()
+    model.fit(trainx, trainy.astype(int))
+    pred = model.predict(testx)
+    accuracy = accuracy_score(testy.astype(int), pred)
+    roc = roc_auc_score(testy.astype(int), pred)
+    kappa = cohen_kappa_score(testy.astype(int), pred)
+    f1 = f1_score(testy.astype(int), pred)
+    
+    modelaccuracy.append(accuracy)
+    modelroc.append(roc)
+    modelkappa.append(kappa)
+    modelf1.append(f1)
+    
+modelaverageaccuracy = sum(modelaccuracy)/len(modelaccuracy)
+modelaverageroc = sum(modelroc)/len(modelroc)
+modelaveragekappa = sum(modelkappa)/len(modelkappa)
+modelaveragef1 = sum(modelf1)/len(modelf1)
+parameterscores = parameterscores.append({'kernel':'baseline', 'C':'baseline', 'gamma':'baseline', 'degrees':'baseline', 'accuracy':modelaverageaccuracy, 'roc':modelaverageroc, 'kappa':modelaveragekappa, 'f1':modelaveragef1}, ignore_index = True)
+
+
+
+
+
+
+accuracyparams = parameterscores[parameterscores['accuracy'] > parameterscores['accuracy'][48]]
+rocparams = parameterscores[parameterscores['roc'] > parameterscores['roc'][48]]
+kappaparams = parameterscores[parameterscores['kappa'] > parameterscores['kappa'][48]]
+f1params = parameterscores[parameterscores['f1'] > parameterscores['f1'][48]]
+
+
+allparams = pd.DataFrame()
+allparams=allparams.append(accuracyparams, ignore_index = True)
+allparams=allparams.append(rocparams, ignore_index = True)
+allparams=allparams.append(kappaparams, ignore_index = True)
+allparams=allparams.append(f1params, ignore_index = True)
+
+
+print allparams
+
+
+
+
+
 
 
     
