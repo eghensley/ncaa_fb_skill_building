@@ -11,4 +11,5 @@ Created on Tue Oct 17 09:38:33 2017
 ### SVC(C = 1, kernel = 'rbf', gamma = .015), acc: 0.525867714473, roc: 0.526362691778, kappa: 0.0526141396108	, f1: 0.522886707894
 ### SVC(C = 2, kernel = 'sigmoid', gamma = .01), acc: 0.520628683694, roc: 0.520694449743, kappa: 0.0412869219299	, f1: 0.51179955846
 ### SVC(C = 10, kernel = 'poly', gamma = .1, degrees = 3), acc: 0.523903077931, roc: 0.524549324939, kappa: 0.0490053701801, f1: 0.518624185229
+### SVC(C = .005, kernel = 'linear'), acc:  0.520410, roc: 0.519155, kappa:  0.038282, f1: 0.463038
 
