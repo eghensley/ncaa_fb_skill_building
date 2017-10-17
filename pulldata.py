@@ -11,7 +11,7 @@ def pulldata():
     import mysql.connector   
     import pandas as pd
     
-    cnx = mysql.connector.connect(user='root', password='Tribe86!',
+    cnx = mysql.connector.connect(user='root', password='ibm1234',
                                   host='127.0.0.1',
                                   database='ncaa')    
     cursor = cnx.cursor() 
