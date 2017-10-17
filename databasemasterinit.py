@@ -12,7 +12,7 @@ from bassetsql import bassetsqlinsert
 from baseteamsqlinsert import baseteamsqlinsert
 from odds2007sql import odds2007sql
 from oddspost2007sql import oddspost2007sql
-passcode = '*****'
+passcode = '***********'
 
 print ('begin database initiation')
 resetsql(passcode)
@@ -23,7 +23,8 @@ bassetsqlinsert(passcode)
 print('added basset rankings')
 odds2007sql(passcode)
 print('added 2007 odds data')
-for i in range(1,6):
+for i in range(1,7):
+    i=6
     oddspost2007sql(passcode, i) 
     print('added %s percent of games since 2008') % (float(i)/6)
 baseteamsqlinsert(passcode)

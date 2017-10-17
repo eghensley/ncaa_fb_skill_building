@@ -11,7 +11,7 @@ def pulldata():
     import mysql.connector   
     import pandas as pd
     
-    cnx = mysql.connector.connect(user='root', password='ibm1234',
+    cnx = mysql.connector.connect(user='root', password='Tribe86!',
                                   host='127.0.0.1',
                                   database='ncaa')    
     cursor = cnx.cursor() 
@@ -206,7 +206,8 @@ def pulldata():
                 br2.teamname = od.underdog\
                     AND od.oddsdate BETWEEN br2.basedate AND DATE_ADD(br2.basedate, INTERVAL 6 DAY)) AS `dog vs 1-10 by others`\
     FROM\
-        oddsdata AS od;'
+        oddsdata AS od\
+        where year(oddsdate) < "2017" ;'
         
     cursor.execute(query)
     x = pd.DataFrame(cursor.fetchall())
