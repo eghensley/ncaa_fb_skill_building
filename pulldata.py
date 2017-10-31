@@ -6,7 +6,20 @@ Created on Sun Oct 15 21:51:10 2017
 @author: eric.hensleyibm.com
 """
 
-
+#        (SELECT \
+#                (PGH)\
+#            FROM\
+#                masseyratings AS m1\
+#            WHERE\
+#                m1.teamname = od.favorite\
+#                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav PGH`,\
+#        (SELECT \
+#                (PGH)\
+#            FROM\
+#                masseyratings AS m1\
+#            WHERE\
+#                m1.teamname = od.underdog\
+#                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog PGH`,\
 def pulldata():
     import mysql.connector   
     import pandas as pd
@@ -22,7 +35,7 @@ def pulldata():
         favscore,\
         dogscore,\
         line,\
-    	homeaway,\
+        homeaway,\
         (SELECT \
                 (bassetrank)\
             FROM\
@@ -37,7 +50,7 @@ def pulldata():
             WHERE\
                 bt2.teamname = od.underdog\
                     AND od.oddsdate BETWEEN DATE_SUB(bt2.bassetdate, INTERVAL 4 DAY) AND DATE_ADD(bt2.bassetdate, INTERVAL 1 DAY)) AS `dog Basset rank`,\
-          (SELECT \
+        (SELECT \
                 (`predictive-by-other`)\
             FROM\
                 baseratings AS br1\
@@ -204,7 +217,203 @@ def pulldata():
                 baseratings AS br2\
             WHERE\
                 br2.teamname = od.underdog\
-                    AND od.oddsdate BETWEEN br2.basedate AND DATE_ADD(br2.basedate, INTERVAL 6 DAY)) AS `dog vs 1-10 by others`\
+                    AND od.oddsdate BETWEEN br2.basedate AND DATE_ADD(br2.basedate, INTERVAL 6 DAY)) AS `dog vs 1-10 by others`,\
+        (SELECT\
+                (LAZ)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav LAZ`,\
+        (SELECT \
+                (LAZ)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog LAZ`,\
+        (SELECT \
+                (ARG)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav ARG`,\
+        (SELECT \
+                (ARG)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog ARG`,\
+        (SELECT \
+                (MAS)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav MAS`,\
+        (SELECT \
+                (MAS)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog MAS`,\
+        (SELECT \
+                (SAG)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav SAG`,\
+        (SELECT \
+                (SAG)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog SAG`,\
+        (SELECT \
+                (HOW)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav HOW`,\
+        (SELECT \
+                (HOW)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog HOW`,\
+        (SELECT \
+                (BIL)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav BIL`,\
+        (SELECT \
+                (BIL)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog BIL`,\
+        (SELECT \
+                (MAR)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav MAR`,\
+        (SELECT \
+                (MAR)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog MAR`,\
+        (SELECT \
+                (DOK)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav DOK`,\
+        (SELECT \
+                (DOK)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog DOK`,\
+        (SELECT \
+                (DES)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav DES`,\
+        (SELECT \
+                (DES)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog DES`,\
+        (SELECT \
+                (MOR)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav MOR`,\
+        (SELECT \
+                (MOR)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog MOR`,\
+        (SELECT \
+                (BRN)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav BRN`,\
+        (SELECT \
+                (BRN)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog BRN`,\
+        (SELECT \
+                (PIG)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav PIG`,\
+        (SELECT \
+                (PIG)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog PIG`,\
+        (SELECT \
+                (CGV)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav CGV`,\
+        (SELECT \
+                (CGV)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog CGV`,\
+        (SELECT \
+                (BDF)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.favorite\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `fav BDF`,\
+        (SELECT \
+                (BDF)\
+            FROM\
+                masseyratings AS m1\
+            WHERE\
+                m1.teamname = od.underdog\
+                    AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog BDF`\
     FROM\
         oddsdata AS od\
         where year(oddsdate) < "2017" ;'
