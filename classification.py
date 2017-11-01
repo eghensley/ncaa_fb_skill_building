@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler
 import lightgbm as lgm
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
-
+from sklearn.model_selection import StratifiedKFold
 
 np.random.seed(42)
 data = pd.read_csv('ncaadata.csv')
@@ -29,7 +29,7 @@ scores = ['accuracy', 'roc_auc', 'f1_weighted', 'neg_log_loss']
 pipe = Pipeline([
     ('preprocess', StandardScaler()),
     ('reduce_dim', PCA(random_state = 1108, n_components=16,whiten=True,svd_solver='full')),
-    ('classify', GaussianNB())
+    ('classify', lgm.LGBMClassifier())
 ])
 N_FEATURES_OPTIONS = range(2, 40)
 param_grid = [
@@ -40,7 +40,7 @@ param_grid = [
 
 
 #pipe.fit(x, y.astype(int))
-grid = GridSearchCV(pipe, cv=10, n_jobs=-1, param_grid=param_grid, refit = False, scoring = scores)
+grid = GridSearchCV(pipe, cv=StratifiedKFold(n_splits = 30, shuffle = True, random_state = 1108), n_jobs=1, param_grid=param_grid, refit = False, scoring = scores)
 grid.fit(x, y.astype(int))
 
 
