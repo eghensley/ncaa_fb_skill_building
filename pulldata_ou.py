@@ -6,7 +6,8 @@ Created on Sun Oct 15 21:51:10 2017
 @author: eric.hensleyibm.com
 """
 
-def pulldata():
+
+def pulldata_ou():
     import mysql.connector   
     import pandas as pd
     
@@ -20,8 +21,8 @@ def pulldata():
         underdog,\
         favscore,\
         dogscore,\
-        line,\
-        juice,\
+        overunder,\
+        oujuice,\
         homeaway,\
         (SELECT \
                 (bassetrank)\
@@ -403,7 +404,8 @@ def pulldata():
                     AND od.oddsdate BETWEEN DATE_SUB(m1.masseydate, INTERVAL 5 DAY) AND m1.masseydate) AS `dog BDF`\
     FROM\
         oddsdata AS od\
-        where year(oddsdate) < "2017" ;'
+        where year(oddsdate) < "2017"\
+        order by oddsdate asc;'
         
     cursor.execute(query)
     x = pd.DataFrame(cursor.fetchall())

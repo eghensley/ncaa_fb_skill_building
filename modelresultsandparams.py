@@ -14,4 +14,10 @@ Created on Tue Oct 17 09:38:33 2017
 ### SVC(C = .005, kernel = 'linear'), acc:  0.520410, roc: 0.519155, kappa:  0.038282, f1: 0.463038
 ### KNeighborsClassifier(n_neighbors = 17, weights = 'distance', algorithm = 'ball_tree', leaf_size = 10) acc: 0.509932329186, roc: 0.510384834906, kappa: 0.0207323945751, f1: 0.515142730746 
 ### RandomForestClassifier(max_features = .2, n_estimators = 50, max_depth = 10, min_samples_split = 8)  acc: 0.521283562541, roc: 0.521302236566, kappa: 0.0425276770055,  f1: 0.521287556488
+
+
+
+### SVC(kernel = 'linear', random_state = 46, probability = True, C = .0020691380811147901), PCA(random_state = 1108, n_components=13,whiten=True,svd_solver='full'))
+### SVC(kernel = 'rbf', random_state = 46, probability = True, C = 0.31622776601683794, gamma = 08699999999999998), PCA(random_state = 1108, n_components=16,whiten=True,svd_solver='full')
+
 					

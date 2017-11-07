@@ -7,16 +7,16 @@ Created on Mon Oct 16 10:40:54 2017
 """
 
 
-def classificationdata(traintest):    
-    from pulldata_test import pulldata_test
-    from pulldata import pulldata
+def classificationdata_ou(traintest): 
+    from pulldata_ou_test import pulldata_ou_test
+    from pulldata_ou import pulldata_ou
     import pandas as pd
     import numpy as np
     
     if traintest == 'train':
-        x = pulldata()
+        x = pulldata_ou()
     elif traintest == 'test':
-        x = pulldata_test()
+        x = pulldata_ou_test()
     x = x.dropna(how='any')
     
     rawvars  = [0,0,0,0,0,0,0,0,'basset', 0, 'predictive', 0, 'home', 0, 'away', 0, 'home_adv', 0, 'sos', 0, 'fut_sos', 0, 'seas_sos', 0 ,'last5', 0, 'last10', 0, 'luck', 0, 'consistency', 0, 'vs_top10', 0, 'LAZ', 0, 'ARG', 0, 'MAS', 0,'SAG',0,'HOW',0,'BIL',0,'MAR',0,'DOK',0,'DES',0,'MOR',0,'BRN',0,'PIG',0,'CGV',0,'BDF',0]
@@ -107,11 +107,11 @@ def classificationdata(traintest):
     
     binary = []
     for game in range(0, len(x[3])):
-        if (np.array(x[3])[game] - np.array(x[4])[game]) > np.array(x[5])[game]*-1:
+        if (np.array(x[3])[game] + np.array(x[4])[game]) > np.array(x[5])[game]:
             binary.append(1)
-        elif (np.array(x[3])[game] - np.array(x[4])[game]) < np.array(x[5])[game]*-1:
+        elif (np.array(x[3])[game] + np.array(x[4])[game]) < np.array(x[5])[game]:
             binary.append(0)
-        elif (np.array(x[3])[game] - np.array(x[4])[game]) == np.array(x[5])[game]*-1:
+        elif (np.array(x[3])[game] + np.array(x[4])[game]) == np.array(x[5])[game]:
             binary.append(None)
     
     classset = pd.DataFrame()
@@ -121,4 +121,4 @@ def classificationdata(traintest):
     classset['y'] = np.array(binary)
     classset = classset.dropna(how='any') 
     return classset
-   
+    
