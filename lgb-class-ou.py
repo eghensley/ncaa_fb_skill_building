@@ -26,7 +26,7 @@ x_feat = ['totalbasset', 'totalvs_top10', 'shareBDF', 'shareMOR', 'homeawaydiff'
 x_feat = x_feat[:64]
 x = data[x_feat]
 
-N_FEATURES_OPTIONS = range(10, 700, 20)
+N_FEATURES_OPTIONS = np.logspace(-4,-.5, 40)
 
 
 progress = 0
@@ -56,7 +56,7 @@ for k in N_FEATURES_OPTIONS:
         for every in range(0, len(np.array(testj))):
             ju = [testj[every]/200, -testj[every]/200]
             y_juice.append(ju)
-        model = lgb.LGBMClassifier(random_state = 86, objective = 'binary_logloss', n_estimators = k, verbosity = 2)
+        model = lgb.LGBMClassifier(random_state = 86, objective = 'binary_logloss', n_estimators = 150, verbosity = 2, learning_rate = k)
         model.fit(trainx, trainy)
         progress += 1
         print(('%.2f percent complete') %  (float((float(progress)/(float(len(N_FEATURES_OPTIONS))*float(40)))*100)))
@@ -102,9 +102,16 @@ for k in N_FEATURES_OPTIONS:
 #            print(each,every)
 #        stop+=1
 
+
+# lgb.LGBMClassifier(random_state = 86, objective = 'binary_logloss', n_estimators = 100, verbosity = 2, learning_rate = .021544346900318846)
+# acc: .51087361749720395
+# logloss: .69741058838214331
+
 fig, ax1 = plt.subplots()
 plt.figure(figsize=(10, 10))
 X_axis = N_FEATURES_OPTIONS
+ax1.set_xscale('log')
+ax1.axhline(y=.51087361749720395)
 ax1.set_xlim(min(N_FEATURES_OPTIONS), max(N_FEATURES_OPTIONS))
 ax1.set_ylim(min(allaccuracy)*.99, max(allaccuracy)*1.01)
 ax1.plot(X_axis, allaccuracy, linestyle = ':', color='g')
@@ -119,6 +126,8 @@ ax1.plot([X_axis[bestrocindex], ] * 2, [0, bestroc],
                 linestyle='-.', color='b', marker='x', markeredgewidth=3, ms=8)
 
 ax2 = ax1.twinx()
+ax2.set_xscale('log')
+ax2.axhline(y=.69741058838214331)
 ax2.set_ylim(min(allnewlogloss)*.99, max(allnewlogloss)*1.01)
 ax2.plot(X_axis, allnewlogloss, linestyle = '-', color='r')
 bestnewloglossindex = allnewlogloss.index(min(allnewlogloss))
@@ -133,3 +142,9 @@ ax2.plot([X_axis[besloglossindex], ] * 2, [0, bestlogloss],
 
 fig.tight_layout()
 plt.show()
+
+
+
+N_FEATURES_OPTIONS[allaccuracy.index(max(allaccuracy))]
+allaccuracy[allaccuracy.index(max(allaccuracy))]
+alllogloss[allaccuracy.index(max(allaccuracy))]
