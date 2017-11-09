@@ -63,7 +63,7 @@ plt.grid()
 
 ax = plt.axes()
 ax.set_xlim(min(N_FEATURES_OPTIONS), max(N_FEATURES_OPTIONS)*3)
-ax.set_ylim(min(results['mean_test_neg_log_loss'])*.99, min(results['mean_test_neg_log_loss'])*1.01)
+ax.set_ylim(.4, .8)
 
 ax.axhline(y = bestacc, color = 'g', linestyle = ':')
 ax.axhline(y = bestf1, color = 'k', linestyle = ':')
@@ -140,7 +140,7 @@ plt.grid()
 
 ax = plt.axes()
 ax.set_xlim(min(N_FEATURES_OPTIONS), max(N_FEATURES_OPTIONS))
-ax.set_ylim(min(results['mean_test_accuracy'])*.99, min(results['mean_test_accuracy'])*1.01)
+ax.set_ylim(.47, .53)
 
 ax.axhline(y = bestacc, color = 'g', linestyle = ':')
 ax.axhline(y = bestf1, color = 'k', linestyle = ':')
@@ -148,7 +148,7 @@ ax.axhline(y = bestrocauc, color = 'y', linestyle = ':')
 ax.axhline(y = -1*bestlogloss, color = 'r', linestyle = ':')
 
 # Get the regular numpy array from the MaskedArray
-X_axis = np.array(results['param_classify__C'].data, dtype=float)
+X_axis = np.array(results['param_classify__num_leaves'].data, dtype=float)
 
 for scorer, color in zip(sorted(scores), ['g', 'k', 'r', 'y']):
     if scorer != 'neg_log_loss':
