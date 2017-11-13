@@ -15,31 +15,32 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.decomposition import PCA
 from sklearn.manifold import Isomap, LocallyLinearEmbedding
 import pandas as pd
-
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import log_loss
 h = .02  # step size in the mesh
 
 names = ["Nearest Neighbors", "Linear SVM", "RBF SVM", "Gaussian Process",
-         "Decision Tree", "Random Forest", "Neural Net", "AdaBoost",
-         "Naive Bayes", "QDA"]
+         "Random Forest", "Neural Net", "AdaBoost",
+         "Naive Bayes", "QDA", 'Log Regresison']
 
 classifiers = [
-    KNeighborsClassifier(3),
+    KNeighborsClassifier(5),
     SVC(kernel="linear", C=0.025),
     SVC(gamma=2, C=1),
     GaussianProcessClassifier(1.0 * RBF(1.0)),
-    DecisionTreeClassifier(max_depth=5),
     RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
     MLPClassifier(alpha=1),
     AdaBoostClassifier(),
     GaussianNB(),
-    QuadraticDiscriminantAnalysis()]
+    QuadraticDiscriminantAnalysis(),
+    LogisticRegression()
+    ]
 
 traindata = pd.read_csv('train_ml_data.csv')
 ytrain = traindata['y']
@@ -75,8 +76,8 @@ for ds_cnt, ds in enumerate(datasets):
     X_train, y_train = train
     X_test, y_test = test
     
-    x_min, x_max = X_train[:, 0].min() - 1.5, X_train[:, 0].max() + 1.5
-    y_min, y_max = X_train[:, 1].min() - 1.5, X_train[:, 1].max() + 1.5
+    x_min, x_max = X_train[:, 0].min()*.95, X_train[:, 0].max()*1.05
+    y_min, y_max = X_train[:, 1].min()*.95, X_train[:, 1].max()*1.05
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
@@ -103,6 +104,10 @@ for ds_cnt, ds in enumerate(datasets):
         ax = plt.subplot(len(datasets), len(classifiers) + 1, i)
         clf.fit(X_train, y_train)
         score = clf.score(X_test, y_test)
+        if hasattr(clf, "predict_proba"):
+            proba = None
+            proba = clf.predict_proba(X_test)
+            print('%s classifier, log loss score: %s' % (name, log_loss(y_test, proba)))
         
         print('%s classifier, accuracy score: %s' % (name, score))
         # Plot the decision boundary. For that, we will assign a color to each
