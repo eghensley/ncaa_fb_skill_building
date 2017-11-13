@@ -8,7 +8,7 @@ Created on Mon Oct 16 10:40:54 2017
 
 
 def classificationdata_ml(traintest): 
-    from pulldata_ou_test import pulldata_ou_test
+    from pulldata_ml_test import pulldata_ml_test
     from pulldata_ml import pulldata_ml
     import pandas as pd
     import numpy as np
@@ -16,7 +16,7 @@ def classificationdata_ml(traintest):
     if traintest == 'train':
         x = pulldata_ml()
     elif traintest == 'test':
-        x = pulldata_ou_test()
+        x = pulldata_ml_test()
     x = x.dropna(how='any')
     
     rawvars  = [0,0,0,0,0,0,0,0,'basset', 0, 'predictive', 0, 'home', 0, 'away', 0, 'home_adv', 0, 'sos', 0, 'fut_sos', 0, 'seas_sos', 0 ,'last5', 0, 'last10', 0, 'luck', 0, 'consistency', 0, 'vs_top10', 0, 'LAZ', 0, 'ARG', 0, 'MAS', 0,'SAG',0,'HOW',0,'BIL',0,'MAR',0,'DOK',0,'DES',0,'MOR',0,'BRN',0,'PIG',0,'CGV',0,'BDF',0]

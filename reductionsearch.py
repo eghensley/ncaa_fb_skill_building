@@ -31,8 +31,8 @@ pipe = Pipeline([
     ('classify', LinearSVC(random_state = 1108))
 ])
 
-N_FEATURES_OPTIONS = range(2, 28)
-C_OPTIONS = np.logspace(-3,3,8)
+N_FEATURES_OPTIONS = range(2, 28,2)
+C_OPTIONS = np.logspace(-3,3,4)
 #N_FEATURES_OPTIONS = [StandardScaler(), MinMaxScaler(), RobustScaler(), QuantileTransformer(), Normalizer()]
 param_grid = [
     {
@@ -45,7 +45,7 @@ param_grid = [
 
 reducer_labels = ['StandardScaler', 'MinMaxScaler', 'RobustScaler', 'QuantileTransformer', 'Normalizer']
 
-grid = GridSearchCV(pipe, cv=StratifiedKFold(n_splits = 50, shuffle = True, random_state = 86), n_jobs=-1, param_grid=param_grid, verbose = 4, scoring = ['neg_log_loss', 'accuracy'])
+grid = GridSearchCV(pipe, cv=StratifiedKFold(n_splits = 10, shuffle = True, random_state = 86), n_jobs=-1, param_grid=param_grid, verbose = 4)
 grid.fit(x, y)
 
 #grid.cv_results_[mean_test_scre_accuracy]
@@ -67,5 +67,5 @@ plt.title("Comparing feature reduction techniques")
 plt.xlabel('Reduced number of features')
 plt.xticks(bar_offsets + len(reducer_labels) / 2, N_FEATURES_OPTIONS)
 plt.ylabel('Digit classification accuracy')
-plt.ylim((.7, .8))
+plt.ylim((.74, .76))
 plt.legend(loc='upper right')
