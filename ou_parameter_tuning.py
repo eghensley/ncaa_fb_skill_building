@@ -14,7 +14,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import RobustScaler
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 
 
 np.random.seed(42)
@@ -28,31 +28,28 @@ y = data['y']
 scores = ['accuracy', 'roc_auc', 'f1_weighted', 'neg_log_loss']
 pipe = Pipeline([
     ('preprocess', RobustScaler()),
-    ('reduce_dim', PCA(random_state = 1108, n_components=3,whiten=True,svd_solver='full')),
-    ('classify', KNeighborsClassifier())
+    ('reduce_dim', PCA(iterated_power=7, random_state = 86, n_components = 5)),
+    ('classify',   SVC(kernel="rbf", random_state = 1108, C = .001, probability = True))
 ])
-#N_FEATURES_OPTIONS = np.logspace(-3, 2, 20)
-N_FEATURES_OPTIONS = range(1, 5)
+N_FEATURES_OPTIONS = np.logspace(3,5, 6)
 
 param_grid = [
     {
-#        'classify__C': N_FEATURES_OPTIONS, 
-        'reduce_dim__n_components': N_FEATURES_OPTIONS, 
-    
+        'classify__C': N_FEATURES_OPTIONS, 
     }
 ]
 
 
 #pipe.fit(x, y.astype(int))
-grid = GridSearchCV(pipe, cv=StratifiedKFold(n_splits = 40, shuffle = True, random_state = 1108), n_jobs=-1, param_grid=param_grid, refit = False, scoring = scores, verbose = 3)
+grid = GridSearchCV(pipe, cv=StratifiedKFold(n_splits = 20, shuffle = True, random_state = 1108), n_jobs=-1, param_grid=param_grid, refit = False, scoring = scores, verbose = 3)
 grid.fit(x, y.astype(int))
 
 
 
-bestacc = 0.514890154597
-bestf1 = 0.513893497767
-bestrocauc = 0.518658822029
-bestlogloss = -0.693913652578
+bestacc = 0.51803331716
+bestf1 = 0.516760120152
+bestrocauc = 0.510372494729
+bestlogloss = -0.704479309612
 
 results = grid.cv_results_
 plt.figure(figsize=(10, 10))
@@ -66,6 +63,7 @@ plt.grid()
 ax = plt.axes()
 ax.set_xlim(min(N_FEATURES_OPTIONS), max(N_FEATURES_OPTIONS)*3)
 ax.set_ylim(.45, .8)
+ax.set_xscale('log')
 
 ax.axhline(y = bestacc, color = 'g', linestyle = ':')
 ax.axhline(y = bestf1, color = 'k', linestyle = ':')
@@ -73,7 +71,7 @@ ax.axhline(y = bestrocauc, color = 'y', linestyle = ':')
 ax.axhline(y = -1*bestlogloss, color = 'r', linestyle = ':')
 
 # Get the regular numpy array from the MaskedArray
-X_axis = np.array(results['param_reduce_dim__n_components'].data, dtype=float)
+X_axis = np.array(results['param_classify__C'].data, dtype=float)
 
 for scorer, color in zip(sorted(scores), ['g', 'k', 'r', 'y']):
     if scorer != 'neg_log_loss':
@@ -143,14 +141,14 @@ plt.grid()
 ax = plt.axes()
 ax.set_xlim(min(N_FEATURES_OPTIONS), max(N_FEATURES_OPTIONS))
 ax.set_ylim(.47, .57)
-
+ax.set_xscale('log')
 ax.axhline(y = bestacc, color = 'g', linestyle = ':')
 ax.axhline(y = bestf1, color = 'k', linestyle = ':')
 ax.axhline(y = bestrocauc, color = 'y', linestyle = ':')
 ax.axhline(y = -1*bestlogloss, color = 'r', linestyle = ':')
 
 # Get the regular numpy array from the MaskedArray
-X_axis = np.array(results['param_reduce_dim__n_components'].data, dtype=float)
+X_axis = np.array(results['param_classify__C'].data, dtype=float)
 
 for scorer, color in zip(sorted(scores), ['g', 'k', 'r', 'y']):
     if scorer != 'neg_log_loss':
@@ -207,15 +205,15 @@ for scorer, color in zip(sorted(scores), ['g', 'k', 'r', 'y']):
 plt.legend(loc="best")
 plt.grid('off')
 plt.show()
-if bestacc - round(max(results['mean_test_accuracy']),7) < .000001:
-    print('new best accuracy: %f')
-    print(max(results['mean_test_accuracy']))
-if bestf1 - round(max(results['mean_test_f1_weighted']),7) < .000001:
-    print('new best f1: %f')
-    print(max(results['mean_test_f1_weighted']))
-if bestrocauc - round(max(results['mean_test_roc_auc']),7) < .000001:
-    print('new best roc auc')
-    print(max(results['mean_test_roc_auc']))
-if bestlogloss - round(max(results['mean_test_neg_log_loss']),7) < .000001:
-    print('new best log loss: %f')
-    print(max(results['mean_test_neg_log_loss']))
+
+
+print(max(results['mean_test_accuracy']))
+keepindex = list(results['mean_test_accuracy']).index(max(results['mean_test_accuracy']))
+print(results['mean_test_f1_weighted'][keepindex])
+print(results['mean_test_roc_auc'][keepindex])
+print(results['mean_test_neg_log_loss'][keepindex])
+print(N_FEATURES_OPTIONS[keepindex])
+
+max(results['mean_test_roc_auc'])
+max(results['mean_test_f1_weighted'])
+max(results['mean_test_neg_log_loss'])
