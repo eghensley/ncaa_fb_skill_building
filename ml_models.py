@@ -7,13 +7,28 @@ Created on Mon Nov 13 20:27:37 2017
 """
 
 #pipe = Pipeline([
-#    ('preprocess', MinMaxScaler()),
-#    ('reduce_dim', PCA(random_state = 1108, n_components=5,whiten=True,svd_solver='full')),
-#    ('classify', KNeighborsClassifier(weights = 'uniform', p=2))
+#    ('a_preprocess', RobustScaler()),
+#    ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 4)),
+#    ('c_classify', KNeighborsClassifier(weights = 'distance', p = 1, n_neighbors = 100))
 #])
 
 #pipe = Pipeline([
-#    ('preprocess', MinMaxScaler()),
-#    ('reduce_dim', PCA(iterated_power=7, random_state = 86, n_features = 3)),
-#    ('classify',   SVC(kernel="linear", random_state = 46))
+#    ('a_preprocess', MinMaxScaler()),
+#    ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
+#    ('c_classify', SVC(random_state = 46, kernel = 'linear', probability = True, C = .1))
 #])
+
+#pipe = Pipeline([
+#    ('a_preprocess', RobustScaler()),
+#    ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
+#    ('c_classify', SVC(random_state = 46, kernel = 'rbf', probability = True, C = .1, gamma = 10))
+#])
+
+
+#pipe = Pipeline([
+#    ('a_preprocess', RobustScaler()),
+#    ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
+#    ('c_classify', SVC(random_state = 46, kernel = 'poly', probability = True, C = .1, degree = 2, gamma = .1))
+#])
+
+#
