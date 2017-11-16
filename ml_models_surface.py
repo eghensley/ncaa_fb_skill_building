@@ -58,4 +58,17 @@ Created on Mon Nov 13 20:27:37 2017
 #    ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 20)),
 #    ('c_classify', RandomForestClassifier(random_state = 46, max_features = None, max_depth = 20, min_samples_split = 2))
 #])
+
+
+#pipe = Pipeline([
+#    ('a_preprocess', StandardScaler()),
+#    ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 44)),
+#    ('c_classify', MLPClassifier(random_state = 46, solver = 'adam', activation = 'tanh', layers = (125,175,)))
+#])
+
+
+
+
 #
+
+
