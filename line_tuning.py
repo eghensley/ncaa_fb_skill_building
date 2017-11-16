@@ -8,26 +8,29 @@ Created on Thu Nov  9 15:55:19 2017
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.model_selection import GridSearchCV, KFold
+from sklearn.model_selection import GridSearchCV, KFold, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, LabelBinarizer
 import pandas as pd
 from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
 
 data = pd.read_csv('train_line_data.csv')
 y = data['y']
 x_feat = ['totalbasset', 'totalvs_top10', 'shareBDF', 'shareMOR', 'homeawaydiff', 'shareCGV', 'fieldeffect', 'diffsos', 'diffconsistency', 'difffut_sos', 'shareBIL', 'totalDES', 'difflast5', 'shareHOW', 'totalseas_sos', 'shareSAG', 'totalsos', 'shareMAS', 'totalfut_sos', 'diffMAS', 'sharePIG', 'diffSAG', 'shareDOK', 'diffBRN', 'shareDES', 'totalPIG', 'diffluck', 'totalluck', 'totallast5', 'shareARG', 'totalMAR', 'totalSAG', 'shareMAR', 'shareLAZ', 'totalARG', 'totallast10', 'totalCGV', 'totalBIL', 'diffBDF', 'diffseas_sos', 'diffCGV', 'totalpredictive', 'diffDOK', 'diffbasset', 'totalconsistency', 'shareBRN', 'totalBDF', 'sharebasset', 'diffMAR', 'diffvs_top10', 'diffpredictive', 'difflast10', 'totalMAS', 'diffHOW', 'totalBRN', 'totalHOW', 'diffDES', 'diffLAZ', 'diffBIL', 'diffMOR', 'totalMOR', 'diffPIG', 'totalDOK', 'diffARG', 'totalLAZ']
 x = data[x_feat]
+y = LabelBinarizer().fit_transform(y)
+x,xx,y,yy = train_test_split(x,y,train_size = .5, test_size = .5, random_state = 86, stratify = y)
+y = np.ravel(y)
+
 
 pipe = Pipeline([
     ('a_preprocess', MinMaxScaler()),
     ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
-    ('c_classify', KNeighborsClassifier(weights='distance', p=1))
+    ('c_classify', SVC(kernel = 'poly', random_state = 46, degree = 2, C =.1))
 ])
 
-param_b = range(2, 103,5)
+param_b = range(1, 4)
 param_a = [StandardScaler(), MinMaxScaler(), RobustScaler()]
 param_a_names = ['standard scaler', 'min max scaler', 'robust scaler']
 param_grid = [
@@ -38,7 +41,7 @@ param_grid = [
 ]
 
 scorelist = ['accuracy', 'f1_weighted', 'roc_auc', 'neg_log_loss']
-grid = GridSearchCV(pipe, cv=KFold(n_splits = 25, shuffle = True, random_state = 86), refit = False, n_jobs=-1, param_grid=param_grid, verbose = 4, scoring = scorelist)
+grid = GridSearchCV(pipe, cv=KFold(n_splits = 10, shuffle = True, random_state = 86), refit = False, n_jobs=-1, param_grid=param_grid, verbose = 4, scoring = scorelist)
 grid.fit(x, y)
 
 for score in scorelist[:-1]:  
