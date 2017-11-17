@@ -21,17 +21,17 @@ import lightgbm as lgb
 
 def lin_svc():
     pipe = Pipeline([
-        ('a_preprocess', RobustScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 1)),
-        ('c_classify', SVC(kernel = 'linear', probability = True, random_state = 46, C = .04))
+        ('a_preprocess', MinMaxScaler()),
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
+        ('c_classify', SVC(kernel = 'linear', random_state = 1108, probability = True, C = .1))
     ])
     return ('SVC-lin', pipe)
 
 def rbf_svc():
     pipe = Pipeline([
         ('a_preprocess', RobustScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
-        ('c_classify', SVC(kernel = 'rbf', probability = True, random_state = 46, C = 1, gamma =1))
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 1)),
+        ('c_classify', SVC(kernel = 'rbf', random_state = 1108, probability = True, C = 100, gamma = .1))
     ])
     return ('SVC-rbf', pipe)
 
@@ -39,55 +39,55 @@ def poly_svc():
     pipe = Pipeline([
         ('a_preprocess', StandardScaler()),
         ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 2)),
-        ('c_classify', SVC(kernel = 'poly', random_state = 46, degree = 2, C =.4, gamma = .05, probability = True))
+        ('c_classify', SVC(kernel = 'poly', random_state = 1108, probability = True, C = 1, degree = 2, gamma = 3))
     ])
     return ('SVC-poly', pipe)
 
 def GausProc():
     pipe = Pipeline([
         ('a_preprocess', RobustScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 1)),
-        ('c_classify', GaussianProcessClassifier(1.0 * RBF(1.0)))
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 2)),
+        ('c_classify',  GaussianProcessClassifier(1.0 * RBF(1.0)))
     ])
     return ('Gauss', pipe)
 
 def light_gbc():
     pipe = Pipeline([
-        ('a_preprocess', StandardScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 11)),
-        ('c_classify', lgb.LGBMClassifier(random_state = 46, learning_rate = .243, n_estimators = 100, num_leaves = 18, max_depth = 10))
+        ('a_preprocess', RobustScaler()),
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 2)),
+        ('c_classify', lgb.LGBMClassifier(max_depth = 4, num_leaves = 80, random_state = 46, n_estimators = 45, learning_rate = .0372))
     ])
     return ('LGBC', pipe)
 
 def knn():
     pipe = Pipeline([
-        ('a_preprocess', MinMaxScaler()),
+        ('a_preprocess', RobustScaler()),
         ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 3)),
-        ('c_classify', KNeighborsClassifier(weights='distance', p=1, n_neighbors = 95))
+        ('c_classify', KNeighborsClassifier(weights = 'distance', p = 1, n_neighbors = 15))
     ])
     return ('KNN', pipe)
 
 def QDA():
     pipe = Pipeline([
-        ('a_preprocess', StandardScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 10)),
+        ('a_preprocess', MinMaxScaler()),
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 14)),
         ('c_classify', QuadraticDiscriminantAnalysis())
     ])
     return ('QDA', pipe)
 
 def naive_bayes():
     pipe = Pipeline([
-        ('a_preprocess', StandardScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 12)),
+        ('a_preprocess', MinMaxScaler()),
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 28)),
         ('c_classify', GaussianNB())
     ])
     return ('naiive bayes', pipe)
 
 def RandomForrest():
     pipe = Pipeline([
-        ('a_preprocess', StandardScaler()),
-        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 9)),
-        ('c_classify', RandomForestClassifier(random_state = 46, max_features = None, max_depth = 15, min_samples_split = 45))
+        ('a_preprocess', MinMaxScaler()),
+        ('b_reduce', PCA(iterated_power=7, random_state = 86, n_components = 6)),
+        ('c_classify', RandomForestClassifier(random_state = 46, max_features = None, max_depth = 6, min_samples_split = 23, n_estimators = 40))
     ])
     return ('Random Forrest', pipe)
 
