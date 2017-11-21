@@ -42,16 +42,21 @@ x = data[x_feat]
 scorelist = ['neg_log_loss', 'accuracy', 'f1_weighted', 'roc_auc', 'precision', 'recall']
 params = [{'classifier':models}]
 pipe = Pipeline([('classifier',DummyClassifier())])
-grid = GridSearchCV(pipe, cv=KFold(n_splits = 10, shuffle = True, random_state = 86), param_grid = params, n_jobs=1, refit = False, verbose = 4, scoring = scorelist)
+grid = GridSearchCV(pipe, cv=KFold(n_splits = 15, shuffle = True, random_state = 86), param_grid = params, n_jobs=-1, refit = False, verbose = 4, scoring = scorelist)
 grid.fit(x, y)
 
 results = grid.cv_results_
 scores = pd.DataFrame(columns = scorelist)
+scores.to_csv('line ensemnle results.csv')
+
 for metric in scorelist:
     score = results['mean_test_%s'%(metric)]
     scores[metric] = score    
 scores = np.array(scores)
-scores.to_csv('ml ensemnle results.csv')
+
+
+
+
 
 modelscores = pd.DataFrame(columns = names)
 values = []
